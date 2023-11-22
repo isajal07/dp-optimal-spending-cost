@@ -1,0 +1,7 @@
+Table with Optimal Values for Subproblems and Choices:
+Week 1: City A - $3500 (Choice: A), City B - $2500 (Choice: B)
+Week 2: City A - $4200 (Choice: B), City B - $3100 (Choice: B)
+Week 3: City A - $5300 (Choice: B), City B - $6200 (Choice: B)
+Week 4: City A - $6300 (Choice: A), City B - $7500 (Choice: A)
+
+Optimal Spending Cost: $6300
