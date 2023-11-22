@@ -48,5 +48,17 @@ int main()
     // Memoization table
     vector<vector<int>> memo(n + 1, vector<int>(2, -1));
 
+    // Find the optimal spending cost
+    int minCost = min(OPT(n, 0, memo), OPT(n, 1, memo));
+
+    cout << "Table with Optimal Values for Subproblems:" << endl;
+    for (int i = 1; i <= n; ++i)
+    {
+        cout << "Week " << i << ": City A - $" << OPT(i, 0, memo) << ", City B - $" << OPT(i, 1, memo) << endl;
+    }
+
+    cout << endl
+         << "Optimal Spending Cost: $" << minCost << endl;
+
     return 0;
 }
