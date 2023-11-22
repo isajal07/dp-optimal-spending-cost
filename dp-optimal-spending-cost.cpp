@@ -16,12 +16,13 @@ vector<int> B = {2500, 1000, 3500, 2000}; // City B salaries
 
 int n = A.size(); // Size of the vector array
 
-// Recursive function to compute the optimal spending cost
-int OPT(int week, int city, vector<vector<int>> &memo)
+// Recursive function to compute the optimal spending cost and store choices
+int OPT(int week, int city, vector<vector<int>> &memo, vector<vector<int>> &choices)
 {
     // Base case
     if (week == 1)
     {
+        choices[week][city] = city;
         return (city == 0) ? A[0] : B[0];
     }
 
@@ -34,8 +35,18 @@ int OPT(int week, int city, vector<vector<int>> &memo)
     int diffCity = (city == 0) ? 1 : 0;
 
     // Recursive cases
-    int sameCityCost = (city == 0) ? (A[week - 1] + OPT(week - 1, city, memo) - Da) : (B[week - 1] + OPT(week - 1, city, memo) - Db);
-    int diffCityCost = (city == 0) ? (A[week - 1] + OPT(week - 1, diffCity, memo) + F) : (B[week - 1] + OPT(week - 1, diffCity, memo) + F);
+    int sameCityCost = (city == 0) ? (A[week - 1] + OPT(week - 1, city, memo, choices) - Da) : (B[week - 1] + OPT(week - 1, city, memo, choices) - Db);
+    int diffCityCost = (city == 0) ? (A[week - 1] + OPT(week - 1, diffCity, memo, choices) + F) : (B[week - 1] + OPT(week - 1, diffCity, memo, choices) + F);
+
+    // Store choices for reconstruction
+    if (sameCityCost < diffCityCost)
+    {
+        choices[week][city] = city;
+    }
+    else
+    {
+        choices[week][city] = diffCity;
+    }
 
     // Memoize the result
     memo[week][city] = min(sameCityCost, diffCityCost);
@@ -48,29 +59,35 @@ int main()
     // Memoization table
     vector<vector<int>> memo(n + 1, vector<int>(2, -1));
 
+    // Table to store choices for optimal solution reconstruction
+    vector<vector<int>> choices(n + 1, vector<int>(2, -1));
+
     // Find the optimal spending cost
-    int minCost = min(OPT(n, 0, memo), OPT(n, 1, memo));
+    int min_cost = min(OPT(n, 0, memo, choices), OPT(n, 1, memo, choices));
 
     // Write results to output file
-    ofstream outFile("spendcost_pb_out.txt");
+    ofstream outFile("spendcost_pc_out.txt");
     if (!outFile.is_open())
     {
         cerr << "Unable to open output file." << endl;
         return 1;
     }
 
-    outFile << "Table with Optimal Values for Subproblems:" << endl;
-    cout << "Table with Optimal Values for Subproblems:" << endl;
+    outFile << "Table with Optimal Values for Subproblems and Choices:" << endl;
+    cout << "Table with Optimal Values for Subproblems and Choices:" << endl;
+
     for (int i = 1; i <= n; ++i)
     {
-        outFile << "Week " << i << ": City A - $" << OPT(i, 0, memo) << ", City B - $" << OPT(i, 1, memo) << endl;
-        cout << "Week " << i << ": City A - $" << OPT(i, 0, memo) << ", City B - $" << OPT(i, 1, memo) << endl;
+        string cho0 = choices[i][0] == 0 ? "A" : "B";
+        string cho1 = choices[i][1] == 0 ? "A" : "B";
+        outFile << "Week " << i << ": City A - $" << OPT(i, 0, memo, choices) << " (Choice: " << cho0 << "), City B - $" << OPT(i, 1, memo, choices) << " (Choice: " << cho1 << ")" << endl;
+        cout << "Week " << i << ": City A - $" << OPT(i, 0, memo, choices) << " (Choice: " << cho0 << "), City B - $" << OPT(i, 1, memo, choices) << " (Choice: " << cho1 << ")" << endl;
     }
 
     outFile << endl
-            << "Optimal Spending Cost: $" << minCost << endl;
+            << "Optimal Spending Cost: $" << min_cost << endl;
     cout << endl
-         << "Optimal Spending Cost: $" << minCost << endl;
+         << "Optimal Spending Cost: $" << min_cost << endl;
 
     outFile.close();
 
