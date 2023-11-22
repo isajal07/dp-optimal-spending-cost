@@ -1,0 +1,6 @@
+Table with Optimal Values for Subproblems:
+Week 1: City A - $3500, City B - $2500
+Week 2: City A - $4200, City B - $3100
+Week 3: City A - $5300, City B - $6200
+Week 4: City A - $6300, City B - $7500
+Optimal Spending Cost: $6300

@@ -51,14 +51,28 @@ int main()
     // Find the optimal spending cost
     int minCost = min(OPT(n, 0, memo), OPT(n, 1, memo));
 
+    // Write results to output file
+    ofstream outFile("spendcost_pb_out.txt");
+    if (!outFile.is_open())
+    {
+        cerr << "Unable to open output file." << endl;
+        return 1;
+    }
+
+    outFile << "Table with Optimal Values for Subproblems:" << endl;
     cout << "Table with Optimal Values for Subproblems:" << endl;
     for (int i = 1; i <= n; ++i)
     {
+        outFile << "Week " << i << ": City A - $" << OPT(i, 0, memo) << ", City B - $" << OPT(i, 1, memo) << endl;
         cout << "Week " << i << ": City A - $" << OPT(i, 0, memo) << ", City B - $" << OPT(i, 1, memo) << endl;
     }
 
+    outFile << endl
+            << "Optimal Spending Cost: $" << minCost << endl;
     cout << endl
          << "Optimal Spending Cost: $" << minCost << endl;
+
+    outFile.close();
 
     return 0;
 }
